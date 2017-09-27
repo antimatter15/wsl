@@ -4,13 +4,16 @@ const getPort = require('get-port');
 const WebSocket = require('ws');
 const argv = require('yargs')
     .describe('binary', 'Pipe contents as binary websockets')
+    .boolean('binary')
+    .describe('port', 'Listen on particular port')
+    .default('port', 43110)
     .argv
 
 var buffer = [],
     wss = null,
     stdinClosed = false;
 
-getPort({ port: 43110 }).then(port => {
+getPort({ port: parseInt(argv.port) }).then(port => {
     wss = new WebSocket.Server({ port: port });
     process.stdout.write('# Broadcasting (' + (argv.binary ? 'binary' : 'utf8') + ') to ws://localhost:' + port + '/\n')
 
